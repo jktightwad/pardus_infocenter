@@ -2,7 +2,7 @@
 	require_once("base_mod.php");
 	require_once("level_mod.php");
 	require_once("xml_helper.php");
-
+// much of this was tweaked from original 1.6 base code without notating changes.
 	class HackMod extends BaseMod {
 		public static function addHack($universe, $data, $level) {
 			$doc = new DOMDocument();
@@ -173,7 +173,7 @@
 			mysql_close($conn);
 			return $hack;
 		}
-
+		//hack request additions Jan 2019
 		public static function getHackRequest() {
 			$conn = self::getConnection();
 			$join = "";
@@ -193,7 +193,7 @@
 //echo("<script>console.log('PHP: ".json_encode($hack_requests)."');</script>");
 			return $hack_requests;
 		}
-		
+		//hack request additions Jan 2019
 		public static function addHackRequest($universe, $method, $pilot, $faction) {
 
 			$conn = self::getConnection();
@@ -236,6 +236,7 @@
 			mysql_query($sql, $conn);
 		}
 
+		//hack request additions Jan 2019
 		public static function deleteHackRequest($hackrequest) {
 			$conn = self::getConnection();
 			$sql = sprintf(
