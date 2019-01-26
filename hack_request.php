@@ -21,7 +21,7 @@
 	$method = $_REQUEST["method"];
 	$pilot = $_REQUEST["pilot"];
 	$faction = $_REQUEST["faction"];
-echo "<script type='text/javascript'>alert($universe);</script>";
+echo "<script type='text/javascript'>alert('$universe');</script>";
 //echo $pilot;
 	;
 
