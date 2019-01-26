@@ -26,12 +26,13 @@
 	$filters["pilot"] = v($_REQUEST, "pilot");
 	$filters["turnover"] = v($_REQUEST, "turnover");
 	$hacks = HackMod::getHacks($filters, $level, $pageNumber, $pageCount);
+	
+	// hack request additions
 	$hack_requests = HackMod::getHackRequest();
 	$requests["universe"] = $_SESSION["account"]->getUniverse();
 	$requests["method"] = v($_REQUEST, "method");
-	$requests["faction"] = v($_REQUEST, "factionr");
+	$requests["faction"] = v($_REQUEST, "faction");
 	$requests["pilot"] = v($_REQUEST, "pilot");
-
 	$hackMethods = array("brute", "skilled", "freak", "guru");
 	$factions = array("Empire", "Federation", "Union");
 	//$turnoverLimits = array(">=", "<=");
@@ -43,6 +44,7 @@
 			if ($filter)
 				$params .= sprintf("&%s=%s", $name, $filter);
 		}
+		// added this loop to try and add the hack request field variables
 		foreach ($requests as $name => $request) {
 			if ($request)
 				$params .= sprintf("&%s=%s", $name, $request);
@@ -69,90 +71,91 @@
 </script>
 </head>
 <body>
-
+<!-- Added for Hack Requests -->
 	<table align="center" width="500">
 	<h2 align="center">Hack Requests</h2>
 	<tr>
-	
 		<td>
-		<h2 align="center">Submit Request</h2>
-				<form method="post" action="hack_request.php">
-				<input type="hidden" name="hrequest" value="<?php echo $requests["universe"]; ?>" />
-				<table background="<?php echo(SettingsMod::STATIC_IMAGES)?>/bgd.gif" class="messagestyle" align='center'>
+			<td>
+			<h2 align="center">Submit Request</h2>
+					<form method="post" action="hack_request.php">
+					<input type="hidden" name="hrequest" />
+					<table background="<?php echo(SettingsMod::STATIC_IMAGES)?>/bgd.gif" class="messagestyle" align='center'>
+					<tr>
+						<td>
+							<table>
+							<tr>
+								<td>
+									<label>Pilot:&nbsp;</label>
+									<input name="pilot" type="text" value="<?php echo($requests["pilot"])?>" style="width:120"/>
+								</td>
+								<td>
+									<label>Hack Method:&nbsp;</label>
+									<select name="method" style="width:120">
+										<option value="">All</option>
+										<?php foreach ($hackMethods as $hackMethod):?>
+										<option value="<?php echo($hackMethod)?>" <?php if ($hackMethod == $requests["method"]) echo('selected="selected"')?>><?php echo($hackMethod)?></option>
+										<?php endforeach?>
+									</select>
+								</td>
+								<td>
+									<label>Faction:&nbsp;</label>
+									<select name="faction" style="width:120">
+										<?php foreach ($factions as $faction):?>
+										<option value="<?php echo($faction)?>" <?php if ($faction == $requests["faction"]) echo('selected="selected"')?>><?php echo($faction)?></option>
+										<?php endforeach?>
+								</td>
+							</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+
+						<td align="center"><input type="submit" value="Submit Request"></td>
+					</tr>
+					</table>
+				
+			<td>
+			<h2 align="center">Pending Requests</h2>
+				<table background="<?php echo(SettingsMod::STATIC_IMAGES)?>/bgd.gif" class="messagestyle" align="center" width="100%">
 				<tr>
-					<td>
-						<table>
-						<tr>
-							<td>
-								<label>Pilot:&nbsp;</label>
-								<input name="pilot" type="text" value="<?php echo($requests["pilot"])?>" style="width:120"/>
-							</td>
-							<td>
-								<label>Hack Method:&nbsp;</label>
-								<select name="method" style="width:120">
-									<option value="">All</option>
-									<?php foreach ($hackMethods as $hackMethod):?>
-									<option value="<?php echo($hackMethod)?>" <?php if ($hackMethod == $requests["method"]) echo('selected="selected"')?>><?php echo($hackMethod)?></option>
-									<?php endforeach?>
-								</select>
-							</td>
-							<td>
-								<label>Faction:&nbsp;</label>
-								<select name="faction" style="width:120">
-									<?php foreach ($factions as $faction):?>
-									<option value="<?php echo($faction)?>" <?php if ($faction == $requests["faction"]) echo('selected="selected"')?>><?php echo($faction)?></option>
-									<?php endforeach?>
-							</td>
-						</tr>
-						</table>
+				</tr>
+				<tr>
+
+					<th>&nbsp;</th>
+					<th><u>Request Date</u></th>
+					<th><u>Universe</u></th>
+					<th><u>Hack Target</u></th>
+					<th><u>Faction</u></th>
+					<th><u>Method</u></th>
+				</tr>
+				<?php
+					$i = 0;
+					foreach ($hack_requests as $hackrequest):
+					$i++;
+				?>
+				<tr bgcolor='#0B0B2F' onMouseOver='chOn(this)' onMouseOut='chOut(this)' onClick='chClick(this)'>
+					<td align='right' nowrap='nowrap' style='cursor:crosshair' >
+						<?php echo(($pageNumber - 1) * SettingsMod::PAGE_RECORDS_PER_PAGE + $i)?>.
 					</td>
+					<td nowrap='nowrap' style='cursor:crosshair' >
+						<script language="javascript">document.write(formatDate(<?php echo(strtotime($hackrequest["date"]) * 1000)?>))</script>
+					</td>
+					<td align='center' nowrap='nowrap' style='cursor:crosshair' ><?php echo($hackrequest["universe"])?></td>
+					<td align='center' nowrap='nowrap' style='cursor:crosshair' ><?php echo($hackrequest["pilot"])?></td>
+					<td align='center' nowrap='nowrap' style='cursor:crosshair' ><?php echo($hackrequest["faction"])?></td>
+					<td align='center' nowrap='nowrap' style='cursor:crosshair' ><?php echo($hackrequest["method"])?></td>
 				</tr>
-				<tr>
-
-					<td align="center"><input type="submit" value="Submit Request"></td>
-				</tr>
+				<?php endforeach; ?>
 				</table>
-			
-		<td>
-		<h2 align="center">Pending Requests</h2>
-			<table background="<?php echo(SettingsMod::STATIC_IMAGES)?>/bgd.gif" class="messagestyle" align="center" width="100%">
-			<tr>
-			</tr>
-			<tr>
-
-				<th>&nbsp;</th>
-				<th><u>Request Date</u></th>
-				<th><u>Universe</u></th>
-				<th><u>Hack Target</u></th>
-				<th><u>Faction</u></th>
-				<th><u>Method</u></th>
-			</tr>
-			<?php
-				$i = 0;
-				foreach ($hack_requests as $hackrequest):
-				$i++;
-			?>
-			<tr bgcolor='#0B0B2F' onMouseOver='chOn(this)' onMouseOut='chOut(this)' onClick='chClick(this)'>
-				<td align='right' nowrap='nowrap' style='cursor:crosshair' >
-					<?php echo(($pageNumber - 1) * SettingsMod::PAGE_RECORDS_PER_PAGE + $i)?>.
-				</td>
-				<td nowrap='nowrap' style='cursor:crosshair' >
-					<script language="javascript">document.write(formatDate(<?php echo(strtotime($hackrequest["date"]) * 1000)?>))</script>
-				</td>
-				<td align='center' nowrap='nowrap' style='cursor:crosshair' ><?php echo($hackrequest["universe"])?></td>
-				<td align='center' nowrap='nowrap' style='cursor:crosshair' ><?php echo($hackrequest["pilot"])?></td>
-				<td align='center' nowrap='nowrap' style='cursor:crosshair' ><?php echo($hackrequest["faction"])?></td>
-				<td align='center' nowrap='nowrap' style='cursor:crosshair' ><?php echo($hackrequest["method"])?></td>
-			</tr>
-			<?php endforeach; ?>
-			</table>
-		</td>
+			</td>
+			</td>
 		</td>
 	</tr>
 	<tr>
 	</tr>
 	</table>
-	
+<!-- End of Hack Requests addition -->	
 	<table align="center" width="500">
 	<h2 align="center">Hack Logs</h2>
 	<tr>
