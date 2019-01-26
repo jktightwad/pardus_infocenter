@@ -4,6 +4,7 @@
 	require_once("modules/hack_mod.php");
 	SecurityMod::login();
 
+//Completely unsure of how to recieve from hacks and send to hack_mod
 
 //	HackMod::addHackRequest(v($_REQUEST, "universe"), v($_REQUEST, "method"), v($_REQUEST, "pilot"), v($_REQUEST, "faction"));
 
