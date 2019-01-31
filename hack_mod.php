@@ -7,7 +7,6 @@
 		public static function addHack($universe, $data, $level) {
 			$doc = new DOMDocument();
 			$doc->loadXML($data);
-
 			$node = XmlHelper::getChildByName($doc->documentElement, "building_positions");
 			$buildingPositions = $node ? $doc->saveXML($node) : null;
 			$node = XmlHelper::getChildByName($doc->documentElement, "buildings");
@@ -16,7 +15,6 @@
 			$shipStatus = $node ? $doc->saveXML($node) : null;
 			$node = XmlHelper::getChildByName($doc->documentElement, "contacts");
 			$contacts = $node ? $doc->saveXML($node) : null;
-
 			$hack = XmlHelper::nodeToArray($doc);
 			$date = date("Y-m-d H-i-s", $hack["date"] / 1000);
 			$foes = $hack["foes"] ? join(",", $hack["foes"]) : null;
@@ -24,7 +22,6 @@
 			$foeAlliances = $hack["foe_alliances"] ? join(",", $hack["foe_alliances"]) : null;
 			$friendAlliances = $hack["friend_alliances"] ? join(",", $hack["friend_alliances"]) : null;
             //$contacts = $hack["contacts"] ? join("|", $hack["contacts"]) : null;
-
 			$conn = self::getConnection();
 			$sql =
 				sprintf(
@@ -64,12 +61,9 @@
 //echo "<script type='text/javascript'>alert('$contacts');</script>";	
 			return mysql_query($sql, $conn);
 		}
-
 		public static function getHacks($filters, $level, &$pageNumber, &$pageCount) {
 			$conn = self::getConnection();
-
 			$join = "";
-
 			$where = sprintf("where is_deleted != 1 and universe = '%s' ", $_SESSION["account"]->getUniverse());
 			if ($filters["method"])
 				$where .= sprintf("and method = '%s' ", mysql_real_escape_string($filters["method"]));
@@ -98,7 +92,6 @@
 					"and l.level <= %d ",
 					intval($level)
 				);
-
 			$sql = "select count(*) as cnt from ".SettingsMod::DB_TABLE_PREFIX."hack as h " . $join . $where;
 			$result = mysql_query($sql, $conn);
 			$row = mysql_fetch_assoc($result);
@@ -140,7 +133,6 @@
 			//echo("<script>console.log('PHP: ".json_encode($hacks)."');</script>");
 			return $hacks;
 		}
-
 		public static function getHack($id) {
 			$conn = self::getConnection();
 			$sql =
@@ -195,8 +187,11 @@
 		}
 		//hack request additions Jan 2019
 		public static function addHackRequest($universe, $method, $pilot, $faction) {
-
 			$conn = self::getConnection();
+			$universe = $_SESSION["account"]->getUniverse();
+			$pilot = $pilot;
+			$method = $method;
+			$faction = $faction;
 /* 			$sql =
 				sprintf(
 					"insert into ".SettingsMod::DB_TABLE_PREFIX."hack_request(" .
@@ -210,8 +205,11 @@
 					$pilot,
 					$faction
 				); */
-			$date = date();
-			$sql = "insert into ".SettingsMod::DB_TABLE_PREFIX."hack_request (universe, `date`, method, pilot, faction) values (" . $universe . $date . $method . $pilot . $faction . ") ";
+			$date = date("Y-m-d H-i-s", date() / 1000);
+//echo "<script type='text/javascript'>alert('$method');</script>";
+			$sql = "insert into ".SettingsMod::DB_TABLE_PREFIX."hack_request (universe, method, pilot, faction) values (" ."'". $universe. "', '".  $method."', '". $pilot."', '". $faction . "') ";
+			//$sql = "insert into ".SettingsMod::DB_TABLE_PREFIX."hack_request (universe, method, pilot, faction) values ('%s', '%s', '%s', '%s') ";
+//echo "<script type='text/javascript'>alert($sql);</script>";
 			return mysql_query($sql, $conn);
 		}
 		
@@ -222,20 +220,16 @@
 				mysql_real_escape_string($level),
 				intval($id)
 			);
-
 			mysql_query($sql, $conn);
 		}
-
 		public static function deleteHack($hack) {
 			$conn = self::getConnection();
 			$sql = sprintf(
 				"update ".SettingsMod::DB_TABLE_PREFIX."hack set is_deleted = 1 where id = %d",
 				intval($hack["id"])
 			);
-
 			mysql_query($sql, $conn);
 		}
-
 		//hack request additions Jan 2019
 		public static function deleteHackRequest($hackrequest) {
 			$conn = self::getConnection();
@@ -243,10 +237,8 @@
 				"update ".SettingsMod::DB_TABLE_PREFIX."hack_request set is_deleted = 1 where id = %d",
 				intval($hackrequest["id"])
 			);
-
 			mysql_query($sql, $conn);
 		}
-
 		/**
 		 * Send debug code to the Javascript console
 		 */ 
@@ -258,7 +250,5 @@
 				echo("<script>console.log('PHP: ".$data."');</script>");
 			}
 		}
-
-
 	}
 ?>
