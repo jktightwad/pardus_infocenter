@@ -4,11 +4,9 @@
 	require_once("modules/hack_mod.php");
 	SecurityMod::login();
 
-//Completely unsure of how to recieve from hacks and send to hack_mod
 
 //	HackMod::addHackRequest(v($_REQUEST, "universe"), v($_REQUEST, "method"), v($_REQUEST, "pilot"), v($_REQUEST, "faction"));
 
-//	HackMod::addHackRequest($universe, $method, $pilot, $faction);	
 	
 /* 	header(sprintf(
 		"Location: hacks.php",
@@ -17,13 +15,30 @@
 		$_REQUEST["pilot"],
 		$_REQUEST["faction"]
 	)) */
+
+   
+  // echo "Welcome ". $_REQUEST['universe']. "<br />"; */
 	
 	$universe = $_REQUEST["universe"];
-	$method = $_REQUEST["method"];
 	$pilot = $_REQUEST["pilot"];
+	$method = $_REQUEST["method"];
 	$faction = $_REQUEST["faction"];
-echo "<script type='text/javascript'>alert('$universe');</script>";
-//echo $pilot;
+	
+	$huniverse = $universe;
+	$hpilot = $pilot;
+	$hmethod = $method;
+	$hfaction = $faction;
+
+	HackMod::addHackRequest($universe, $method, $pilot, $faction);	
+	//HackMod::addHackRequest($_REQUEST["universe"], $_REQUEST["pilot"], $_REQUEST["method"], $_REQUEST["method"];	
+		header(sprintf(
+		"Location: hacks.php"
+/* 		,
+		$huniverse,
+		$hmethod,
+		$hpilot,
+		$hfaction */
+	));
 	;
 
 ?>
