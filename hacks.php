@@ -30,13 +30,13 @@
 	// hack request additions
 	$hack_requests = HackMod::getHackRequest();
 	$requests["universe"] = $_SESSION["account"]->getUniverse();
-	$requests["method"] = v($_REQUEST, "method");
-	$requests["faction"] = v($_REQUEST, "faction");
-	$requests["pilot"] = v($_REQUEST, "pilot");
-	$hackMethods = array("brute", "skilled", "freak", "guru");
+	$requests["method"] = $_REQUEST["method"];
+	$requests["faction"] = $_REQUEST["faction"];
+	$requests["pilot"] = $_REQUEST["pilot"];
+	$hackMethods = array("Brute", "Skilled", "Freak", "Guru");
 	$factions = array("Empire", "Federation", "Union");
 	//$turnoverLimits = array(">=", "<=");
-
+echo ($_REQUEST['hrequest']);
 	function drawNavigator() {
 		global $pageCount, $pageNumber, $filters, $requests;
 		$params = "";
@@ -79,7 +79,7 @@
 			<td>
 			<h2 align="center">Submit Request</h2>
 					<form method="post" action="hack_request.php">
-					<input type="hidden" name="hrequest" />
+					<input type="hidden" name="hrequest" /> 
 					<table background="<?php echo(SettingsMod::STATIC_IMAGES)?>/bgd.gif" class="messagestyle" align='center'>
 					<tr>
 						<td>
@@ -88,11 +88,11 @@
 								<td>
 									<label>Pilot:&nbsp;</label>
 									<input name="pilot" type="text" value="<?php echo($requests["pilot"])?>" style="width:120"/>
+<!--									<input name="pilot" type="text" style="width:120"/> -->
 								</td>
 								<td>
 									<label>Hack Method:&nbsp;</label>
 									<select name="method" style="width:120">
-										<option value="">All</option>
 										<?php foreach ($hackMethods as $hackMethod):?>
 										<option value="<?php echo($hackMethod)?>" <?php if ($hackMethod == $requests["method"]) echo('selected="selected"')?>><?php echo($hackMethod)?></option>
 										<?php endforeach?>
@@ -110,7 +110,7 @@
 						</td>
 					</tr>
 					<tr>
-
+					</form>
 						<td align="center"><input type="submit" value="Submit Request"></td>
 					</tr>
 					</table>
