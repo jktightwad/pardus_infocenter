@@ -231,11 +231,12 @@
 			mysql_query($sql, $conn);
 		}
 		//hack request additions Jan 2019
-		public static function deleteHackRequest($hackrequest) {
+		public static function deleteHackRequest($hackRequest) {
 			$conn = self::getConnection();
+//echo "<script type='text/javascript'>alert('$hackRequest');</script>";
 			$sql = sprintf(
 				"update ".SettingsMod::DB_TABLE_PREFIX."hack_request set is_deleted = 1 where id = %d",
-				intval($hackrequest["id"])
+				intval($hackRequest)
 			);
 			mysql_query($sql, $conn);
 		}
