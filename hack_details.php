@@ -142,21 +142,8 @@ Hack log was not found.
 		</td>
 	</tr>
 	<?php endif;?>
-	<?php if ($hack["contacts"]):?>
-	<tr>
-        <th colspan="3">Contacts</th>
-    </tr>
-    <tr>
-				<?php foreach ($hack["contacts"] as $contact):?>
-				<tr>
-					<td><?php echo($contact)?></td>
-				</tr>
-				<?php endforeach;?>
-    </tr>
-    <?php endif;?>
-	</tbody>
-	</table>
-
+    </table>
+	
 	<?php if ($hack["shipStatus"]):?>
 	<br>
 	<table class="messagestyle" align="center" background="<?php echo(SettingsMod::STATIC_IMAGES)?>/bg.gif">
@@ -177,6 +164,53 @@ Hack log was not found.
 	<?php endforeach;?>
 	</table>
 	<?php endif;?>
+	
+	<?php if ($hack["contacts"]):?>
+	<br>
+	<table class="messagestyle" align="center" background="<?php echo(SettingsMod::STATIC_IMAGES)?>/bg.gif">
+    <tbody>
+		<th align="center" colspan="12">Contacts</th>
+			<tr>
+				<th>Contact (<?php echo count($hack["contacts"])?>)</th>
+				<th>Type</th>
+				<th>Trade</th>
+				<th>Starbase</th>
+				<th>Squad</th>
+				<th>MO</th>
+				<th>Ambush</th>
+				<th>Timebomb</th>
+			</tr>
+			<?php foreach ($hack["contacts"] as $contact):?>
+			<?php $working = explode(",", $contact);?>
+			<?php $split = str_split($working[1], 1);?>
+			<tr>
+			<td><?php echo($working[0]);?></td>
+		
+			<?php if($split[0] == 1):?>
+				<td align="center" ><img src="<?php echo SettingsMod::STATIC_IMAGES, "/ui_pilot.png"?>"></td>
+			<?php elseif($split[0] == 2):?>
+				<td align="center" ><img src="<?php echo SettingsMod::STATIC_IMAGES, "/ui_alliance.png"?>"></td>
+			<?php elseif($split[0] == 3):?>
+				<td align="center" ><img src="<?php echo SettingsMod::STATIC_IMAGES, "/ui_faction.png"?>"></td>
+			<?php endif;?>
+	
+			<?php $count1 = 1;?>
+			<?php while ($count1 < 7):?>
+				<?php if($split[$count1] == 0):?>
+					<td align="center" ><img src="<?php echo SettingsMod::STATIC_IMAGES, "/ui_flag_red.png"?>"></td>
+				<?php elseif($split[$count1] == 1):?>
+					<td align="center" ><img src="<?php echo SettingsMod::STATIC_IMAGES, "/ui_flag_green.png"?>"></td>
+				<?php elseif($split[$count1] == 2):?>
+					<td align="center" ><img src="<?php echo SettingsMod::STATIC_IMAGES, "/ui_set.png"?>"></td>
+				<?php endif;?>
+				<?php $count1 += 1;?>
+			<?php endwhile;?>
+			</tr>
+			<?php endforeach;?>
+	</tbody>
+	</table>
+	<?php endif;?>
+
 
 	<?php if ($hack["buildingPositions"]):?>
 	<br>
@@ -198,6 +232,8 @@ Hack log was not found.
 	</tbody>
 	</table>
 	<?php endif;?>
+
+	
 
 	<?php if ($hack["foes"] || $hack["friends"] || $hack["foeAlliances"] || $hack["friendAlliances"]):?>
 	<br>
